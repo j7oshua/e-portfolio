@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '@/views/Home'
-import NotFound from '@/views/NotFound'
 
 Vue.use(VueRouter)
 
@@ -14,12 +13,25 @@ const routes = [
   {
     path: '/:pathMatch(.*)*',
     name: 'NotFound',
-    component: NotFound
+    component: () => import(/* webpackChunkName: "NotFound" */ '../views/NotFound')
+  },
+  {
+    path: '/mail',
+    beforeEnter () { location.href = 'mailto:jgrimard22@gmail.com' }
   }
 ]
 
 const router = new VueRouter({
   mode: 'history',
+  scrollBehavior (to, from, savedPosition) {
+    if (to.hash) {
+      return {
+        selector: to.hash,
+        offset: { x: 0, y: 60 },
+        behavior: 'smooth'
+      }
+    }
+  },
   base: process.env.BASE_URL,
   routes
 })
